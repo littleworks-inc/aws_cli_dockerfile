@@ -45,7 +45,7 @@ jobs:
         # if: ${{ github.event_name == 'pull_request' }}
         uses: docker/scout-action@v1
         with:
-          command: cves,recommendations
+          command: cves
           image: ${{ steps.metadata.outputs.tags }}
           to-latest: true
           ignore-base: true
