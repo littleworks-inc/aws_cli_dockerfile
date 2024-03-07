@@ -16,6 +16,7 @@ RUN apk --update --no-cache add \
         openssl \
         unzip \
         curl \
+        py3-cryptography \
     # Install yq (YAML processor)
     && wget -q -O /usr/bin/yq $(wget -q -O - https://api.github.com/repos/mikefarah/yq/releases/latest | jq -r '.assets[] | select(.name == "yq_linux_amd64") | .browser_download_url') \
     && chmod +x /usr/bin/yq \
