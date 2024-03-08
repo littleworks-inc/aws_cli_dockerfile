@@ -2,7 +2,7 @@
 FROM alpine:latest
 
 ENV TERRAFORM_VERSION=1.7.4
-ENV TERRAFORM_SHA256=<SHA256_checksum>
+ENV TERRAFORM_SHA256=1.7.4
 
 # Install necessary packages: Python 3, pip, awscli, jq, git, gnupg
 RUN apk --update --no-cache add \
