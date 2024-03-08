@@ -44,7 +44,7 @@ jobs:
         uses: coguardio/coguard-scan-action@v0.2.2
         with:
           dockerImageName: ${{ steps.metadata.outputs.tags }}
-          failLevel: 0
+          failLevel: false
           username: ${{ secrets.CoGuardUserName }}
           password: ${{ secrets.CoGuardPassword }}
       # - name: Docker Scout

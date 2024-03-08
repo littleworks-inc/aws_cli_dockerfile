@@ -2,9 +2,10 @@
 FROM alpine:latest
 
 ENV TERRAFORM_VERSION=1.7.4
-ENV TERRAFORM_SHA256=1.7.4
+# ARG ANSIBLE_VERSION=9.1.0
+# ARG ANSIBLE_LINT_VERSION=6.22.1
 
-# Install necessary packages: Python 3, pip, awscli, jq, git, gnupg
+# Install necessary packages: Python 3, pip, awscli, jq, git
 RUN apk --update --no-cache add \
         python3 \
         py3-pip \
@@ -16,19 +17,20 @@ RUN apk --update --no-cache add \
         unzip \
         curl \
         py3-cryptography \
-        gnupg \
     # Install yq (YAML processor)
     && wget -q -O /usr/bin/yq $(wget -q -O - https://api.github.com/repos/mikefarah/yq/releases/latest | jq -r '.assets[] | select(.name == "yq_linux_amd64") | .browser_download_url') \
     && chmod +x /usr/bin/yq \
     && echo "Intalling Terraform ...." \
     && wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
-    && wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_SHA256SUMS \
-    && wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_SHA256SUMS.sig \
-    && gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys 51852D87348FFC4C \
-    && gpg --verify terraform_${TERRAFORM_VERSION}_SHA256SUMS.sig terraform_${TERRAFORM_VERSION}_SHA256SUMS \
-    && sha256sum -c --ignore-missing terraform_${TERRAFORM_VERSION}_SHA256SUMS \
     && unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /usr/bin \
-    && rm -rf terraform_${TERRAFORM_VERSION}_linux_amd64.zip terraform_${TERRAFORM_VERSION}_SHA256SUMS terraform_${TERRAFORM_VERSION}_SHA256SUMS.sig
+    # && pip3 install --no-cache-dir --upgrade \
+    #     pip \
+    # && pip3 install --no-cache-dir --upgrade --no-binary \
+    #     ansible==${ANSIBLE_VERSION} \
+    #     ansible-lint==${ANSIBLE_LINT_VERSION} \
+    # && ansible --version \
+    # Remove unnecessary files
+    && rm -rf /var/cache/apk/*
 
 # Add a non-root user named dockuser
 RUN addgroup -g 1000 dockuser \
@@ -39,5 +41,3 @@ USER dockuser
 
 # Set the working directory
 WORKDIR /home/dockuser
-
-# Specify any additional configuration or commands as needed
