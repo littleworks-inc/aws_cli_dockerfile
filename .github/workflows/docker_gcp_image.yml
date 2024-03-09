@@ -36,7 +36,7 @@ jobs:
       - name: lint Action
         uses: hadolint/hadolint-action@v2.0.0
         with:
-            dockerfile: Dockerfile
+            dockerfile: gcp/Dockerfile
             ignore: DL3018,SC2046,DL4006
             failure-threshold: warning
             no-color : false

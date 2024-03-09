@@ -32,11 +32,11 @@ RUN pip install --upgrade pip --break-system-packages \
     && pip install azure-cli --break-system-packages
 
 # Add a non-root user named dockuser
-# RUN addgroup -g 1000 dockuser \
-#     && adduser -D -G dockuser -u 1000 dockuser
+RUN addgroup -g 1000 dockuser \
+    && adduser -D -G dockuser -u 1000 dockuser
 
-# # Switch to the dockuser
-# USER dockuser
+# Switch to the dockuser
+USER dockuser
 
-# # Set the working directory
-# WORKDIR /home/dockuser
+# Set the working directory
+WORKDIR /home/dockuser

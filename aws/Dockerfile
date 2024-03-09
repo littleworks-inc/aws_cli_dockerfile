@@ -24,11 +24,11 @@ RUN apk --update --no-cache add \
     && rm -rf /var/cache/apk/*
 
 # Add a non-root user named dockuser
-# RUN addgroup -g 1000 dockuser \
-#     && adduser -D -G dockuser -u 1000 dockuser
+RUN addgroup -g 1000 dockuser \
+    && adduser -D -G dockuser -u 1000 dockuser
 
-# # Switch to the dockuser
-# USER dockuser
+# Switch to the dockuser
+USER dockuser
 
-# # Set the working directory
-# WORKDIR /home/dockuser
+# Set the working directory
+WORKDIR /home/dockuser
