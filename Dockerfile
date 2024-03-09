@@ -32,5 +32,3 @@ USER dockuser
 
 # Set the working directory
 WORKDIR /home/dockuser
-
-SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
