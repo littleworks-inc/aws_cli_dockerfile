@@ -48,12 +48,20 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=raw,value={{sha}},enable=${{ github.ref_type != 'tag' }}
 
-      - name: Build and push Docker image
+      - name: Build Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           push: false
           tags: ${{ steps.metadata.outputs.tags }}
+
+      - name: Run Snyk to check Docker image for vulnerabilities
+        continue-on-error: true
+        uses: snyk/actions/docker@master
+        env:
+            SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+            image: ${{ steps.metadata.outputs.tags }}
 
     #   - name: Run Trivy vulnerability scanner
     #     id: vulnerability_scan
@@ -73,10 +81,10 @@ jobs:
     #         exit 1
     #       fi
 
-      - name: Build and push Docker image
-        if: success()  # Only run if vulnerability scan succeeded
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: false
-          tags: ${{ steps.metadata.outputs.tags }}
+    #   - name: Build and push Docker image
+    #     if: success()  # Only run if vulnerability scan succeeded
+    #     uses: docker/build-push-action@v5
+    #     with:
+    #       context: .
+    #       push: false
+    #       tags: ${{ steps.metadata.outputs.tags }}
