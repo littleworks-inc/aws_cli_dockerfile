@@ -6,7 +6,7 @@ on:
 
 env:
     REGISTRY: devtoolhub
-    IMAGE_NAME: aws_cli
+    IMAGE_NAME: azure_cli
     COMPARE_TAG: latest
     SHA: ${{ github.event.after }}
 jobs:
@@ -63,7 +63,7 @@ jobs:
       - name: Build Docker image
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: azure_cli/.
           push: true
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
