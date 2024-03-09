@@ -46,7 +46,7 @@ jobs:
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
-            type=raw,value={{sha}},enable=${{ github.ref_type != 'tag' }}
+            # type=raw,value={{sha}},enable=${{ github.ref_type != 'tag' }}
 
       - name: Build Docker image
         uses: docker/build-push-action@v5
@@ -63,28 +63,3 @@ jobs:
             command: cves
             ignore-unchanged: true
             only-severities: critical,high,medium,low,unspecified
-    #   - name: Run Trivy vulnerability scanner
-    #     id: vulnerability_scan
-    #     uses: docker/scout-action@v1
-    #     with:
-    #       command: cves
-    #       image:  ${{ steps.metadata.outputs.tags }}
-    #       ignore-unchanged: true
-    #       only-severities: critical,high
-
-    #   - name: Check vulnerability scan result
-    #     run: |
-    #       if [[ "${{ steps.vulnerability_scan.outcome }}" == "success" ]]; then
-    #         echo "Vulnerability scan passed. Proceeding to build and push Docker image."
-    #       else
-    #         echo "Vulnerability scan failed. Skipping Docker image build and push."
-    #         exit 1
-    #       fi
-
-    #   - name: Build and push Docker image
-    #     if: success()  # Only run if vulnerability scan succeeded
-    #     uses: docker/build-push-action@v5
-    #     with:
-    #       context: .
-    #       push: false
-    #       tags: ${{ steps.metadata.outputs.tags }}
