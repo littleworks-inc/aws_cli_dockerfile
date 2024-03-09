@@ -1,5 +1,5 @@
 # Use the latest Alpine Linux base image
-FROM alpine:latest
+FROM alpine:3.19.1
 
 ENV TERRAFORM_VERSION=1.7.4
 # ARG ANSIBLE_VERSION=9.1.0
