@@ -11,7 +11,7 @@ env:
     SHA: ${{ github.event.after }}
 jobs:
   build:
-    name: Build & push docker image
+    name: AWS Build & push docker image
     runs-on: ubuntu-latest
 
     steps:
@@ -33,7 +33,7 @@ jobs:
             driver-opts: |
               image=moby/buildkit:v0.13.0
 
-      - name: lint Action
+      - name: lint Action for AWS
         uses: hadolint/hadolint-action@v2.0.0
         with:
             dockerfile: aws/Dockerfile
@@ -48,7 +48,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
                  
-      - name: Docker metadata
+      - name: AWS Docker metadata
         id: metadata
         uses: docker/metadata-action@v5
         with:
@@ -60,7 +60,7 @@ jobs:
             type=semver,pattern=v{{version}}
             type=sha,prefix=,suffix=,format=short
 
-      - name: Build Docker image
+      - name: AWS Build & push Docker image
         uses: docker/build-push-action@v5
         with:
           context: aws/
@@ -70,7 +70,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Docker Scout
+      - name: AWS Docker Scout
         id: docker-scout
         uses: docker/scout-action@v1
         with:

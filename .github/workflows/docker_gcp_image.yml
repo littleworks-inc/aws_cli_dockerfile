@@ -11,7 +11,7 @@ env:
     SHA: ${{ github.event.after }}
 jobs:
   build:
-    name: Build & push docker image
+    name: GCP Build & push docker image
     runs-on: ubuntu-latest
 
     steps:
@@ -33,7 +33,7 @@ jobs:
             driver-opts: |
               image=moby/buildkit:v0.13.0
 
-      - name: lint Action
+      - name: lint Action for GCP
         uses: hadolint/hadolint-action@v2.0.0
         with:
             dockerfile: gcp/Dockerfile
@@ -48,7 +48,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
                  
-      - name: Docker metadata
+      - name: GCP Docker metadata
         id: metadata
         uses: docker/metadata-action@v5
         with:
@@ -60,10 +60,10 @@ jobs:
             type=semver,pattern=v{{version}}
             type=sha,prefix=,suffix=,format=short
 
-      - name: Build Docker image
+      - name: GCP Build & Push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: gcp_cli/
+          context: gcp/
           push: true
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
