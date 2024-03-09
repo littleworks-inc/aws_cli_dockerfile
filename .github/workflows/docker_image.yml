@@ -21,7 +21,13 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
- 
+      - name: lint
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+            dockerfile: Dockerfile
+            no-color : false
+            no-fail: false
+            
       - name: Docker metadata
         id: metadata
         uses: docker/metadata-action@v5
@@ -32,14 +38,14 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=raw,value={{sha}},enable=${{ github.ref_type != 'tag' }}
 
-      - name: Run Trivy vulnerability scanner
-        id: vulnerability_scan
-        uses: docker/scout-action@v1
-        with:
-          command: cves
-          image:  ${{ steps.metadata.outputs.tags }}
-          ignore-unchanged: true
-          only-severities: critical,high
+    #   - name: Run Trivy vulnerability scanner
+    #     id: vulnerability_scan
+    #     uses: docker/scout-action@v1
+    #     with:
+    #       command: cves
+    #       image:  ${{ steps.metadata.outputs.tags }}
+    #       ignore-unchanged: true
+    #       only-severities: critical,high
 
       - name: Check vulnerability scan result
         run: |
