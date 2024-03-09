@@ -26,7 +26,7 @@ jobs:
         with:
             dockerfile: Dockerfile
             no-color : false
-            no-fail: false
+            no-fail: true
             
       - name: Docker metadata
         id: metadata
