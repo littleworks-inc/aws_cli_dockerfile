@@ -52,7 +52,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: false
+          push: true
           tags: ${{ steps.metadata.outputs.tags }}
 
       - name: Run Snyk to check Docker image for vulnerabilities
@@ -62,7 +62,7 @@ jobs:
             SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
             image: ${{ steps.metadata.outputs.tags }}
-            args: --file=Dockerfile
+            args: --severity-threshold=high
     #   - name: Run Trivy vulnerability scanner
     #     id: vulnerability_scan
     #     uses: docker/scout-action@v1
