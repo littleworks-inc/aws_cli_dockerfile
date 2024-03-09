@@ -60,6 +60,7 @@ jobs:
         uses: docker/scout-action@v1
         with:
             image: ${{ steps.metadata.outputs.tags }}
+            command: cves
             ignore-unchanged: true
             only-severities: critical,high
     #   - name: Run Trivy vulnerability scanner
