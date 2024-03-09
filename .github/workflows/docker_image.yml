@@ -28,8 +28,8 @@ jobs:
             no-color : false
             no-fail: true
             ignored:
-                DL3018
-            
+                - DL3018
+                 
       - name: Docker metadata
         id: metadata
         uses: docker/metadata-action@v5
