@@ -4,7 +4,7 @@ FROM alpine:3.19.1
 ENV TERRAFORM_VERSION=1.7.4
 ENV AZURE_CLI_VERSION=2.0.81
 
-# Install necessary packages: Python 3, pip, awscli, jq, git
+# Install necessary packages: Python 3, pip, jq, git
 RUN apk --update --no-cache add \
         alpine-sdk \
         python3 \

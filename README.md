@@ -1,53 +1,65 @@
-Below is a sample README file that provides an overview of the Dockerfile and instructions on how to build the Docker image and test it:
+```markdown
+# Docker Image Build Pipelines
 
----
+This repository contains GitHub Actions workflow YAML files for building and publishing Docker images containing CLI tools for various cloud platforms. The workflows are triggered on pushes to any branch.
 
-# Docker Image: devtoolhub/aws_cli
+## Pipelines
 
-## Overview
+### AWS Pipeline
 
-This Docker image provides an environment with Python 3, aws-cli, jq, git, and yq installed. It is designed to offer a convenient platform for working with AWS CLI commands and manipulating YAML files using yq.
+- **File:** [docker_aws_image.yml](docker_aws_image.yml)
+- **Description:** This pipeline builds and publishes a Docker image containing the AWS CLI tools.
 
-## Dockerfile
+### Azure Pipeline
 
-The Dockerfile used to build this image installs the necessary packages using the Alpine package manager (`apk`). It also upgrades pip and installs yq from its GitHub release.
+- **File:** [docker_azure_image.yml](docker_azure_image.yml)
+- **Description:** This pipeline builds and publishes a Docker image containing the Azure CLI tools.
 
-```Dockerfile
-# Use the latest Alpine Linux base image
-FROM alpine:latest
+### GCP Pipeline
 
-# Install necessary packages: Python 3, pip, awscli, jq, git
-RUN apk --no-cache add \
-        python3 \
-        py3-pip \
-        aws-cli \
-        jq \
-        git \
-    # Upgrade pip
-    && pip3 install --upgrade pip \
-    # Install yq (YAML processor)
-    && wget -q -O /usr/bin/yq $(wget -q -O - https://api.github.com/repos/mikefarah/yq/releases/latest | jq -r '.assets[] | select(.name == "yq_linux_amd64") | .browser_download_url') \
-    && chmod +x /usr/bin/yq \
-    # Remove unnecessary files
-    && rm -rf /var/cache/apk/*
-```
+- **File:** [docker_gcp_image.yml](docker_gcp_image.yml)
+- **Description:** This pipeline builds and publishes a Docker image containing the Google Cloud Platform CLI tools.
 
-## Building the Docker Image
+## Pipeline Overview
 
-To build the Docker image, navigate to the directory containing the Dockerfile and execute the following command:
+Each pipeline is designed to perform the following tasks:
+
+1. **Checkout:** Checks out the code at the specified commit SHA.
+2. **Set up QEMU:** Configures QEMU to support multi-platform builds.
+3. **Set up Docker Buildx:** Sets up Docker Buildx for building Docker images for multiple platforms.
+4. **Lint Dockerfile:** Lints the Dockerfile located in the respective directory (`aws/`, `azure/`, `gcp/`) to ensure Dockerfile best practices are followed.
+5. **Log in to Docker Hub:** Logs in to Docker Hub using the provided Docker Hub username and token stored as GitHub secrets.
+6. **Generate Docker Metadata:** Generates metadata for the Docker image, including labels and tags.
+7. **Build & Push Docker Image:** Builds and pushes the Docker image to the specified container registry (Docker Hub).
+8. **Scan Docker Image:** Scans the Docker image for security vulnerabilities (CVEs) using the Docker Scout action.
+
+## Environment Variables
+
+Each pipeline uses the following environment variables:
+
+- `REGISTRY`: The container registry where the Docker image will be pushed (e.g., Docker Hub).
+- `IMAGE_NAME`: The name of the Docker image.
+- `COMPARE_TAG`: The tag to compare the changes with (e.g., `latest`).
+- `SHA`: The GitHub commit SHA of the pushed commit.
+
+## Usage
+
+1. Clone this repository:
 
 ```bash
-docker build -t devtoolhub/aws_cli .
+git clone <repository-url>
 ```
 
-## Testing the Docker Image
+2. Modify the YAML files (`docker_aws_image.yml`, `docker_azure_image.yml`, `docker_gcp_image.yml`) or Dockerfiles in the respective directories (`aws/`, `azure/`, `gcp/`) as needed.
 
-To test the Docker image and verify if all the required packages are installed, run a container based on the image and execute verification commands inside the container:
+3. Ensure that Docker is installed and configured on your local machine.
 
-```bash
-docker run -it --rm devtoolhub/aws_cli /bin/sh
+4. Push changes to the repository to trigger the respective pipeline(s).
+
+## Additional Notes
+
+- Each pipeline is written using GitHub Actions YAML syntax.
+- Docker Hub is assumed as the container registry. Modify the login step if using a different registry.
+- The pipelines are set up to run on Ubuntu latest runners.
+- For security, Docker Hub credentials should be stored as GitHub secrets.
 ```
-
-Inside the container, you can execute commands such as `python3 --version`, `aws --version`, `jq --version`, `git --version`, and `yq --version` to verify the presence of the required packages.
-
-Once you've finished testing, you can exit the container by typing `exit`.
