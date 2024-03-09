@@ -2,8 +2,6 @@
 FROM alpine:3.19.1
 
 ENV TERRAFORM_VERSION=1.7.4
-# ARG ANSIBLE_VERSION=9.1.0
-# ARG ANSIBLE_LINT_VERSION=6.22.1
 
 # Install necessary packages: Python 3, pip, awscli, jq, git
 RUN apk --update --no-cache add \
@@ -23,13 +21,6 @@ RUN apk --update --no-cache add \
     && echo "Intalling Terraform ...." \
     && wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
     && unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /usr/bin \
-    # && pip3 install --no-cache-dir --upgrade \
-    #     pip \
-    # && pip3 install --no-cache-dir --upgrade --no-binary \
-    #     ansible==${ANSIBLE_VERSION} \
-    #     ansible-lint==${ANSIBLE_LINT_VERSION} \
-    # && ansible --version \
-    # Remove unnecessary files
     && rm -rf /var/cache/apk/*
 
 # Add a non-root user named dockuser
@@ -41,3 +32,5 @@ USER dockuser
 
 # Set the working directory
 WORKDIR /home/dockuser
+
+SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
