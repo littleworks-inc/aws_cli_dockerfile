@@ -27,6 +27,8 @@ jobs:
             dockerfile: Dockerfile
             no-color : false
             no-fail: true
+            ignored:
+                DL3018
             
       - name: Docker metadata
         id: metadata
